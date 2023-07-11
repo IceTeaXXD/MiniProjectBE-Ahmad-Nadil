@@ -15,7 +15,6 @@ datasource db {
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
-
 model User {
     id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
     nim          String   @unique
@@ -39,4 +38,26 @@ model Example {
 enum UserRole {
     ADMIN
     USER
+}
+model Student {
+    student_id  String  @id @default(uuid())
+    first_name  String
+    last_name   String
+    enrollments Enrollment[]
+}
+
+model Enrollment {
+    enrollment_id        String   @id @default(uuid())
+    date      DateTime @default(now())
+    student   Student  @relation(fields: [student_id], references: [student_id])
+    student_id String
+    course    Course   @relation(fields: [course_id], references: [course_id])
+    course_id String
+}
+
+model Course {
+    course_id String   @id @default(uuid())
+    name      String
+    credits   Int
+    enrollments Enrollment[]
 }
